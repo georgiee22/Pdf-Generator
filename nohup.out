@@ -1,0 +1,55 @@
+Port:  8002
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.43.0                   │ 
+ │               http://127.0.0.1:8002               │ 
+ │       (bound on host 0.0.0.0 and port 8002)       │ 
+ │                                                   │ 
+ │ Handlers ............. 7  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID .............. 6948 │ 
+ └───────────────────────────────────────────────────┘ 
+
+2023/04/12 15:40:29 Error Loading Env File: open .env-SIT: no such file or directory
+2023/04/12 15:48:34 Error Loading Env File: open .env-SIT: no such file or directory
+
+2023/04/12 15:49:25 [35m/Users/fdsap-gatan/Projects/Pdf-Generator/pkg/utils/go-utils/database/database.go:39
+[0m[31m[error] [0mfailed to initialize database, got error cannot parse `host= user= password=xxxxx dbname= port= sslmode= TimeZone=`: invalid port (strconv.ParseUint: parsing "sslmode=": invalid syntax)
+Port:  
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.43.0                   │ 
+ │              http://127.0.0.1:49692               │ 
+ │      (bound on host 0.0.0.0 and port 49692)       │ 
+ │                                                   │ 
+ │ Handlers ............ 11  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID .............. 4337 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+2023/04/12 15:50:28 [35m/Users/fdsap-gatan/Projects/Pdf-Generator/pkg/utils/go-utils/database/database.go:39
+[0m[31m[error] [0mfailed to initialize database, got error cannot parse `host= user= password=xxxxx dbname= port= sslmode= TimeZone=`: invalid port (strconv.ParseUint: parsing "sslmode=": invalid syntax)
+Port:  
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.43.0                   │ 
+ │              http://127.0.0.1:49716               │ 
+ │      (bound on host 0.0.0.0 and port 49716)       │ 
+ │                                                   │ 
+ │ Handlers ............ 11  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID .............. 4537 │ 
+ └───────────────────────────────────────────────────┘ 
+
+
+2023/04/12 15:51:47 [35m/Users/fdsap-gatan/Projects/Pdf-Generator/pkg/utils/go-utils/database/database.go:39
+[0m[31m[error] [0mfailed to initialize database, got error cannot parse `host= user= password=xxxxx dbname= port= sslmode= TimeZone=`: invalid port (strconv.ParseUint: parsing "sslmode=": invalid syntax)
+Port:  
+
+ ┌───────────────────────────────────────────────────┐ 
+ │                   Fiber v2.43.0                   │ 
+ │              http://127.0.0.1:49740               │ 
+ │      (bound on host 0.0.0.0 and port 49740)       │ 
+ │                                                   │ 
+ │ Handlers ............ 11  Processes ........... 1 │ 
+ │ Prefork ....... Disabled  PID .............. 4757 │ 
+ └───────────────────────────────────────────────────┘ 
+

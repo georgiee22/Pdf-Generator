@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example Pdf</title>
+    <style>
+        #textdiv{
+            margin: 5%;
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+        #RA {
+            text-align: right;
+            /* set font size 7.8pt == 6pt in pdf */
+            font-size: 7.8pt; 
+        }
+        p {
+            margin: 0;
+            /* set font size 10.7pt == 8.4pt in pdf */
+            font-size: 14.5pt;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        h3{
+            text-align: center;
+        }
+        table {
+            font-size: 10.7pt;
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+        td.withpadding {
+            height: 30px;
+            border: 0px solid white;
+            text-align: left;
+            padding: 8px;
+            font-size: 14pt;
+        }
+        td {
+            height: auto;
+            border: 1px solid white;
+            text-align: left;
+            font-size: 14pt;
+        }
+        th {
+            height: auto;
+            border: 1px solid white;
+            text-align: center;
+            font-size: 14pt;
+            background-color: turquoise;
+            font-weight: bold;
+        }
+        table.colright td:nth-child(2) {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div id="textdiv">
+    <p style="text-align:justify"><img alt="CARD-BANK-LOGO" src="/Users/g.tan/Projects/Pdf-Generator/Go_Template/pdf-templates/CARD-BANK-LOGO.png" style="height:92px; width:215px" /></p>
+    <p style="text-align:right; color: rgba(0, 102, 0, 1);">&nbsp;<strong>{{ .Pn_no }}</strong></span></span></p>
+    <p style="color: rgba(0, 102, 0, 1);"><strong>ChatBOT ePN</strong></p>
+    <p style="text-align:justify; text-indent: 50px;">Ako si <strong>{{ .Name }}</strong>&nbsp;may sapat na gulang,&nbsp;nakatira sa <strong>{{ .Addresses }}</strong>&nbsp;ay sumasang-ayon na sa pamamagitan ng kasulatang ito ay patunay na ako/kami ay may pagkaka-utang sa <strong>CARD BANK Inc.&nbsp;</strong>ayon sa sumusunod:</p>
+</div>
+<br>
+<div style="margin-left: 2.5%; margin-right: 2.5%;">
+    <table class="colright">
+        <tbody>
+            <tr>
+                <td class="withpadding"><strong>Uri ng Pagkakautang (Loan Type)</strong></td>
+                <td class="withpadding"><strong>ePersonal Loan</strong></td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Halaga ng Pagkakautang (Loan Amount)</strong></td>
+                <td class="withpadding">{{ .Loan_amount }}</td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Dahilan ng Pagkakautang (Loan Purpose)</strong></td>
+                <td class="withpadding">PERSONAL CONSUMPTION</td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Porsyento ng Interes kada buwan (Contractual Rate)</strong></td>
+                <td class="withpadding">{{ .Contractual_rate }}%</td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Porsyento ng Interes  kada buwan sa panahon ng pagkakautang (Effective Interest Rate)</strong></td>
+                <td class="withpadding">{{ .Eir }}%</td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Kabuuang Halagang Interest (Total Interest)</strong></td>
+                <td class="withpadding">{{ .Insterest_due }}</td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Iba Pang Gastos (Other Expenses if any)</strong></td>
+                <td class="withpadding">{{ .Elrf }}</td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Tagal ng Pagbabayad (Loan Term)</strong></td>
+                <td class="withpadding">{{ .Term }} (Weeks)</td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Halaga ng Tinanggap ng Nanghiram (Total Amount of Loan Proceeds)</strong></td>
+                <td class="withpadding">{{ .Loan_amount }}</td>
+            </tr>
+            <tr>
+                <td class="withpadding"><strong>Halaga ng Babayaran (Total Amount Repayment of Borrower)</strong></td>
+                <td class="withpadding">{{ .Total }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<br>
+<div id="textdiv">
+    <p style="text-align: justify; text-indent: 50px;">
+        Pinatototohanan ko na aking tinangap ang isang kopya ng kwentang ito bago pa maganap ang pag-utang at aking nauunawaan at sinasang-ayunan ang mga alituntunin at kasunduang nakapaloob dito at tinanggap ko ang halagang {{ .Amtword }} (Php <strong>{{ .Loan_amount }}.00</strong>) mula sa <strong>CARD BANK Inc.</strong>, Inc. ngayong <strong>{{ .Date_applied }}</strong>.
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Ako ay nangangako na aking babayaran ang pagkakautang na ito ng walang liban sa <strong>CARD BANK Inc.</strong>, Inc. o alinsunod sa anumang ipag-utos ng nasabing bangko, kung saan ang unang hulog ay sa ika - <strong>{{ .Start_date }}</strong> at ang huling hulog sa ika - <strong>{{ .End_date }}</strong>.
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Kaugnay nito, ako ay buong pusong pumapayag na ilipat, isalin o ipagbili ng CARD BANK Inc. Inc. ang lahat ng mga karapatan at interes nito sa ilalim ng Pananagutan sa Pagkakautang na ito kahit kanino mang tao, korporasyon o bangko anumang panahon na naisin ng CARD BANK Inc. Inc. Kinikilala at igagalang ko ng lubusan ang nabangit na karapatan at interes nito at hindi ko kailanman babawiin o ipagkakaila ang pahintulot at pagkilala ng aking ibinigay hinggil dito.
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Na ako/kami ay pumapayag din na ibigay sa "Legitimate Credit Information Bureau" sa ilalim ng Republic Act 9510 o kilala bilang " Credit Information Systems Act. (CISA) and mga impormasyon hinggil sa katatayuan ng aking pagkakautang.
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Kaugnay nito, aking pinahihintulutan na ipasok sa aking PLEDGE Savings Account ang neto ng aking inutang at aking itinatalaga ang nasabing Pledge savings account ang halagang katumbas ng 15% ng lahat ng aking pagkakautang (principal) bilang Garantiya.        
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Gayundin, pinahihintulutan ko at binibigyan ng karapatan ang CARD Bank Inc. na ibawas sa nasabing account o sa anumang deposito mayroon ako sa CARD Bank Inc. ang katumbas na halaga ng aking pagkakautang na hindi ko mababayaran sa takdang panahon na nasasaad sa kasulatang ito.
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Kaugnay pa rin ng kasulatang ito, ako, bilang isang responsableng Miyembro ng CARD Bank Inc., ay nagpapatunay na aking ipinaalam ang transaksyon na ito sa aking asawa/co-borrower.
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Ako/kami ay nagtatalaga sa aking/aming sariling katapatan sa pagtupad ng lahat ng pinagkasunduan at ipinangako sa pamamagitan ng kasulatang ito.
+    </p>
+    <br>
+    <p style="text-align: justify; color: rgba(0, 102, 0, 1);">
+        <strong>Waiver/Consent/Authorization</strong>
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Ako ay nagbibigay din ng pahintulot at sumasang-ayon na ang CARD Bank Inc. ay (a) maaring kumolekta, gumamit at maglahad ng aking personal na impormasyon na nakatala sa aking aplikasyon, o nakuha bilang resulta ng aking pagiging kasapi at (b) maglahad o magbahagi ng nasabing impormasyon sa mga sangay o kaanib ng institusyon ng CARD Bank Inc. at lubos ko/namin ding nauunawaan na ako ay may karapatan na baguhin o rebisahin ang anumang impormasyon na aking ibinigay o inilahad kabilang na ang pagbawi o pagtanggal ng nasabing impormasyon ayon sa isinasaad ng Data Privacy Act ng 2012 at ng CARD Bank Inc. Data Protection Policy.
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Ako ay sumasang-ayon at nagbibigay pahintulot na bawasin mula sa balanse ng aking sariling Pledge Savings Account ang halaga ng lingguhang buwang hulog ng aking pagkaka-utang sa bangko. Gayundin, ay pinahihintulutan ko ang bangko na ibawas sa nabanggit na Pledge Savings Account ang halaga ng aking naturang pagkakautang, halaga ng LRF at iba pang kaukulang charges na napagkasunduang ipapataw ng bangko sa oras ng disbursement ng aking bagong loan.
+    </p>
+    <br>
+    <p style="text-align: justify; text-indent: 50px;">
+        Kaugnay din nito, ay aking pinahihintulutan na direktang ipasok ng bangko sa aking sariling Pledge Savings Account ang anumang halaga ng loan proceeds na aking matatanggap kaugnay sa loan application na aking ipinasa at inaprubahan ng bangko.
+    </p>
+</div>
+<div>
+    <br>
+    <p style="text-align: center; color: rgba(0, 102, 0, 1);">
+        <strong>AMORTIZATION TABLE</strong>
+    </p>
+    <br>
+
+    <table style="font-weight: bold; margin-bottom: 0;">
+        <tbody>
+            <tr>
+                <td style="width: 30%;">Name</td>
+                <td style="width: 30%;">{{ .Name }}</td>
+                <td style="width: 20%;">Product</td>
+                <td style="width: 20%;">ePersonal Loan</td>
+            </tr>
+            <tr>
+                <td>Customer CID</td>
+                <td>{{ .Customer_number }}</td>
+                <td>Start Date</td>
+                <td>{{ .Start_date }}</td>
+            </tr>
+            <tr>
+                <td>Account Number</td>
+                <td>{{ .Settlement_account }}</td>
+                <td>Maturity Date</td>
+                <td>{{ .End_date }}</td>
+            </tr>
+            <tr>
+                <td>Unit</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Center</td>
+                <td></td>
+                <td>Loan Purpose</td>
+                <td>Personal Consumption</td>
+            </tr>
+        </tbody>
+    </table>
+    <table style="margin-top: 0;">
+        <thead>
+            <tr>
+                <th style="width: 20%;">Due Date</th>
+                <th style="width: 16%;">Total Due</th>
+                <th style="width: 16%;">Principal Due</th>
+                <th style="width: 16%;">Interest Due</th>
+                <th style="width: 16%;">Principal Balance</th>
+                <th style="width: 16%;">Interest Balance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td></td>
+                <td style="text-align: center;">{{ .Total }}.00</td>
+                <td style="text-align: center;">{{ .Loan_amount  }}.00</td>
+                <td style="text-align: center;">{{ .Insterest_due }}.00</td>
+                <td style="text-align: center;">{{ .Loan_amount }}.00</td>
+                <td style="text-align: center;">{{ .Insterest_due }}.00</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

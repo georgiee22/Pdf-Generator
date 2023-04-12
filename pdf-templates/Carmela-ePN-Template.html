@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Example Pdf</title>
+    <style>
+        #textdiv{
+            margin: 5%;
+            margin-bottom: 0;
+            margin-top: 0;
+        }
+        #RA {
+            text-align: right;
+            /* set font size 7.8pt == 6pt in pdf */
+            font-size: 7.8pt; 
+        }
+        p {
+            margin: 0;
+            /* set font size 10.7pt == 8.4pt in pdf */
+            font-size: 10.7pt;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        h3{
+            text-align: center;
+        }
+        table {
+            font-size: 10.7pt;
+            font-family: Arial, Helvetica, sans-serif;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        td, th {
+            height: 30px;
+            border: 1px solid black;
+            text-align: left;
+            padding: 8px;
+        }
+        td.colright {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div id="textdiv">
+    <p style="text-align:justify"><img alt="CARD-RBI-LOGO" src="/Users/g.tan/Projects/Pdf-Generator/Go_Template/pdf-templates/CARD-RBI-LOGO.png" style="height:80px; width:245px" /></p>
+    <p style="text-align:right">&nbsp;PN No. <strong>{{ .Pnum }}</strong></span></span></p>
+
+    <p style="text-align:right"><strong>PANANAGUTAN SA PAGKAKAUTANG</strong></p>
+
+    <p id="RA">(Alinsunod sa utos ng RA No. &quot;Truth and Lending Act&quot;)</p>
+
+    <p style="text-align:right">Date Granted: <strong>{{ .Date }}</strong></p>
+
+    <p>Pangalan ng Humiram: <strong>{{ .Name }}</strong></p>
+
+    <p>&nbsp;</p>
+
+    <p style="text-align:justify">Ako si <strong>{{ .Name }}</strong>&nbsp;may sapat na gulang, kasal kay <strong>{{ .Spouse_name }}</strong>&nbsp;nakatira at may pahatiring sulat sa <strong>{{ .Addresses }}</strong>&nbsp;ay sumasang-ayon na sa pamamagitan ng kasulatang ito ay patunay na ako/kami ay may pagkaka-utang sa <strong>CARD MRI RIZAL BANK Inc.&nbsp;</strong>ayon sa sumusunod:</p>
+</div>
+<br>
+<div style="width: 100%">
+    <table>
+        <tbody>
+            <tr>
+                <td colspan="5" style="width:70%">1. Halaga ng Pagkakautang</td>
+                <td style="width:20%"></td>
+                <td class="colright" style="width:10%">{{ .Prin }}</td>
+            </tr>
+            <tr>
+                <td colspan="5" >2.Porsiyento ng Interest kada buwan (Contractual Rate)</td>
+                <td>{{ .M_term }} na buwan</td>
+                <td class="colright" >{{ .Nomflatrate }}</td>
+            </tr>
+            <tr>
+                <td colspan="5" >3.Prosiyento ng Interest kada buwan sa panahon ng pag-kakautang (Effective Interest Rate)</td>
+                <td>Kada Buwan (Monthly)</td>
+                <td class="colright" >{{EIR}}%</td>
+            </tr>
+            <tr>
+                <td colspan="5" >4.Kabuuang halagang Interest</td>
+                <td>Kada term ng pagkakautang (Total)</td>
+                <td class="colright" >{{TERMDAYS}}</td>
+            </tr>
+            <tr>
+                <td colspan="5" rowspan="3">5. Other Expenses</td>
+                <td>LRF</td>
+                <td class="colright" >{{eLRF}}</td>
+            </tr>
+            <tr>
+                <td>Documentary Stamp</td>
+                <td class="colright" >n/a</td>
+            </tr>
+            <tr>
+                <td>Others (Pls. specify):</td>
+                <td class="colright" >n/a</td>
+            </tr>
+            <tr>
+                <td colspan="5" >6.Tagal ng Pagbabayad (Loan Term in Weeks or in Months)</td>
+                <td></td>
+                <td class="colright" >{{TERM}} weeks</td>
+            </tr>
+            <tr>
+                <td colspan="5" >7.Halagang Tinanggap ng Borrower (Amount of Loan Proceeds)</td>
+                <td></td>
+                <td class="colright" >{{PRIN}}</td>
+            </tr>
+            <tr>
+                <td>8. Halaga ng Babayaran </td>
+                <td colspan="4" ></td>
+                <td></td>
+                <td class="colright" ></td>
+            </tr>
+            <tr style="height: 90px; vertical-align: bottom;">
+                <td></td>
+                <td style="text-align: center;">Lump sum</td>
+                <td style="text-align: center;">Monthly</td>
+                <td style="text-align: center;">Semi Monthly</td>
+                <td style="text-align: center;">Weekly ✔</td>
+                <td></td>
+                <td class="colright" >{{WEEKLYDUE}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<br>
+<div id="textdiv">
+    <p style="text-align: justify;">
+        Pinatototohanan ko na aking tinangap ang isang kopya ng kwentang ito bago pa maganap ang pag-utang at aking nauunawaan at sinasang-ayunan ang mga alituntunin at kasunduang nakapaloob dito at tinanggap ko ang halagang {{AMTWORD}}(Php <strong>{{PRIN}}</strong>) mula sa <strong>CARD MRI RIZAL BANK, Inc.</strong>, Inc. ngayong <strong>{{DATE}}</strong>.
+    </p>
+    <p style="text-align: justify;">
+        Ako ay nangangako na aking babayaran ang pagkakautang na ito ng walang liban sa <strong>CARD MRI RIZAL BANK, Inc.</strong>, Inc. o alinsunod sa anumang ipag-utos ng nasabing bangko, kung saan ang unang hulog ay sa ika - {{FPAY}} at ang huling hulog sa ika - {{ENDDATE}}.
+    </p>
+    <p style="text-align: justify; text-indent: 25px;">
+        Kaugnay nito, ako ay buong pusong pumapayag na ilipat, isalin o ipagbili ng <strong>CARD MRI RIZAL BANK, Inc.</strong>, Inc. ang lahat ng mga karapatan at interes nito sa ilalim ng Pananagutan sa Pagkakautang na ito kahit kanino mang tao, korporasyon o bangko anumang panahon na naisin ng <strong>CARD MRI RIZAL BANK, Inc.</strong>, Inc. Kinikilala at igagalang ko ng lubusan ang nabangit na karapatan at interes nito at hindi ko kailanman babawiin o ipagkakaila ang pahintulot at pagkilala ng aking ibinigay hinggil dito.
+    </p>
+    <p style="text-align: justify; text-indent: 25px;">
+        Na ako/kami ay pumapayag din na ibigay sa "Legitimate Credit Information Bureau" sa ilalim ng Republic Act 9510 o kilala bilang " Credit Information Systems Act. (CISA) and mga impormasyon hinggil sa katatayuan ng aking pagkakautang.
+    </p>
+    <p style="text-align: justify; text-indent: 25px;">
+        Kaugnay nito, aking tinatalaga ang aking deposito na may account # <strong>{{SETTLE}}</strong> sa <strong>CARD MRI RIZAL BANK, Inc.</strong>, Inc. ang halagang katumbas ng 15% ng lahat ng aking pagkakautang (principal) bilang garantiya. Gayundin, pinahihintulutan ko at binibigyan ng karapatan ang <strong>CARD MRI RIZAL BANK, Inc.</strong>, Inc. na bawasin sa nasabing account o sa anumang deposito mayroon ako sa <strong>CARD MRI RIZAL BANK, Inc.</strong>, Inc. ang katumbas na halaga ng aking pagkakautang na hindi ko mababayaran sa takdang panahon na nasasaad sa kasulatang ito.        
+    </p>
+    <p style="text-align: justify; text-indent: 25px;">
+        Ako/kami ay nagtatalaga sa aking/aming sariling katapatan sa pagtupad ng lahat ng pinagkasunduan at ipinangako sa pamamagitan ng kasulatang ito.
+    </p>
+    <p style="text-align: justify;">
+        <strong>Waiver/Consent/Authorization</strong>
+    </p>
+    <p style="text-align: justify;">
+        Ako ay nagbibgay din ng pahintulot at sumasang-ayon na ang <strong>CARD MRI RIZAL BANK, Inc.</strong> ay (a) maaring kumolekta, gumamit at maglahad ng aking personal na impormasyon na nakatala sa aking aplikasyon, o nakuha bilang resulta ng aking pagiging kasapi at (b) maglahad o magbahagi ng nasabing impormasyon sa mga sangay o kaanib ng institusyon ng <strong>CARD MRI RIZAL BANK, Inc.</strong> at lubos ko/namin ding nauunawaan na ako ay may karapatan na baguhin o rebisahin ang anumang impormasyon na aking ibinigay o inilahad kabilang na ang pagbawi o pagtanggal ng nasabing impormasyon ayon sa isinasaad ng Data Privacy Act ng 2012 at ng <strong>CARD MRI RIZAL BANK</strong>Data Protection Policy.
+    </p>
+    <p style="text-align: justify;">
+        Ako ay sumasang-ayon at nagbibigay pahintulot na bawasin mula sa balanse ng aking sariling Pangakong Ipon Account ang halaga ng lingguhang buwang hulog ng aking pagkaka-utang sa bangko. Gayundin, ay pinahihintulutan ko ang bangko  na ibawas sa nabanggit na Pangakong Ipon Account ang halaga ng aking naturang pagkakautang, halaga ng LRF at iba pang kaukulang charges na napagkasunduang ipapataw ng bangko sa oras ng disbursement ng aking bagong loan.
+    </p>
+    <br>
+    <p style="text-align: justify;">
+        Kaugnay din nito, ay aking pinahihintulutan na direktang ipasok ng bangko sa aking sariling Pangakong Ipon Account ang anumang halaga ng loan proceeds na aking matatanggap kaugnay sa loan application na aking ipinasa at inaprubahan ng bangko
+    </p>
+    <p style="text-align: justify;">
+        Ang aking pagsang-ayon sa ibaba ay pagpapatunay na lubos kong naunawaan at sinasang-ayunan ang nasasaad sa dokumentong ito.
+    </p>
+</div>
+</body>
+</html>
