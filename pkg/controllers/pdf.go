@@ -6,6 +6,7 @@ import (
 	"Template/pkg/utils/go-utils/database"
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -107,6 +108,9 @@ func HtmlTest(c *fiber.Ctx) error {
 		data.Amtword = "Five Thousand"
 	}
 
+	// assure date_applied
+	date_applied := data.Date_applied
+
 	// format date_applied
 	t, _ := time.Parse("2006-01-02", data.Date_applied)
 	data.Date_applied = t.Format("January 02, 2006")
@@ -138,8 +142,8 @@ func HtmlTest(c *fiber.Ctx) error {
 		ProRateonHalf: 4,
 		N:             int(term), // changaable
 		Frequency:     50,
-		DateReleased:  data.Date_applied, // ????
-		MeetingDay:    6,                 // ????
+		DateReleased:  date_applied, // ????
+		MeetingDay:    6,            // ????
 		DueDateType:   1,
 		WithDST:       0,
 		IsLumpSum:     0,
@@ -197,6 +201,7 @@ func HtmlTest(c *fiber.Ctx) error {
 		})
 	}
 
+	// make request to LOS to calculate amortization
 	req, err := http.NewRequest("POST", "https://loscbtest.cardmri.com:8444/LOSMobileAPI/ComputeAmortization", bytes.NewBuffer(jsonReq))
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("charset", "utf-8")
@@ -229,10 +234,11 @@ func HtmlTest(c *fiber.Ctx) error {
 			Data:    err.Error(),
 		})
 	}
-	//fmt.Print(body)
+	fmt.Print(string(body))
 
 	result := json.RawMessage(body)
-	var mapResult LOSResponseBody
+	fmt.Print(json.Valid(result))
+	mapResult := make(map[string]any)
 	if unmarErr := json.Unmarshal(result, &mapResult); unmarErr != nil {
 		return c.JSON(response.ResponseModel{
 			RetCode: "400",
@@ -257,7 +263,7 @@ func HtmlTest(c *fiber.Ctx) error {
 	return c.JSON(response.ResponseModel{
 		RetCode: "200",
 		Message: "success",
-		Data:    mapResult,
+		Data:    mapResult["amortization"],
 	})
 
 	// return c.SendString(buf.String())
