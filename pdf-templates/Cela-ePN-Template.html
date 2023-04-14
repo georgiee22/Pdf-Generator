@@ -57,10 +57,10 @@
 </head>
 <body>
 <div id="textdiv">
-    <p style="text-align:justify"><img alt="CARD-BANK-LOGO" src="/Users/g.tan/Projects/Pdf-Generator/Go_Template/pdf-templates/CARD-BANK-LOGO.png" style="height:92px; width:215px" /></p>
-    <p style="text-align:right; color: rgba(0, 102, 0, 1);">&nbsp;<strong>{{ .Pn_no }}</strong></span></span></p>
+    <p style="text-align:justify"><img alt="CARD-BANK-LOGO" src="/Users/fdsap-gatan/Projects/Pdf-Generator/pdf-templates/CARD-BANK-LOGO.png" style="height:92px; width:250px" /></p>
+    <p style="text-align:right; color: rgba(0, 102, 0, 1);">&nbsp;<strong>{{ .Data.Pn_no }}</strong></span></span></p>
     <p style="color: rgba(0, 102, 0, 1);"><strong>ChatBOT ePN</strong></p>
-    <p style="text-align:justify; text-indent: 50px;">Ako si <strong>{{ .Name }}</strong>&nbsp;may sapat na gulang,&nbsp;nakatira sa <strong>{{ .Addresses }}</strong>&nbsp;ay sumasang-ayon na sa pamamagitan ng kasulatang ito ay patunay na ako/kami ay may pagkaka-utang sa <strong>CARD BANK Inc.&nbsp;</strong>ayon sa sumusunod:</p>
+    <p style="text-align:justify; text-indent: 50px;">Ako si <strong>{{ .Data.Name }}</strong>&nbsp;may sapat na gulang,&nbsp;nakatira sa <strong>{{ .Data.Addresses }}</strong>&nbsp;ay sumasang-ayon na sa pamamagitan ng kasulatang ito ay patunay na ako/kami ay may pagkaka-utang sa <strong>CARD BANK Inc.&nbsp;</strong>ayon sa sumusunod:</p>
 </div>
 <br>
 <div style="margin-left: 2.5%; margin-right: 2.5%;">
@@ -72,7 +72,7 @@
             </tr>
             <tr>
                 <td class="withpadding"><strong>Halaga ng Pagkakautang (Loan Amount)</strong></td>
-                <td class="withpadding">{{ .Loan_amount }}</td>
+                <td class="withpadding">{{ .Data.Loan_amount }}</td>
             </tr>
             <tr>
                 <td class="withpadding"><strong>Dahilan ng Pagkakautang (Loan Purpose)</strong></td>
@@ -80,31 +80,31 @@
             </tr>
             <tr>
                 <td class="withpadding"><strong>Porsyento ng Interes kada buwan (Contractual Rate)</strong></td>
-                <td class="withpadding">{{ .Contractual_rate }}%</td>
+                <td class="withpadding">{{ .Data.Contractual_rate }}%</td>
             </tr>
             <tr>
                 <td class="withpadding"><strong>Porsyento ng Interes  kada buwan sa panahon ng pagkakautang (Effective Interest Rate)</strong></td>
-                <td class="withpadding">{{ .Eir }}%</td>
+                <td class="withpadding">{{ .Data.Eir }}%</td>
             </tr>
             <tr>
                 <td class="withpadding"><strong>Kabuuang Halagang Interest (Total Interest)</strong></td>
-                <td class="withpadding">{{ .Insterest_due }}</td>
+                <td class="withpadding">{{ .Data.Insterest_due }}</td>
             </tr>
             <tr>
                 <td class="withpadding"><strong>Iba Pang Gastos (Other Expenses if any)</strong></td>
-                <td class="withpadding">{{ .Elrf }}</td>
+                <td class="withpadding">{{ .Data.Elrf }}</td>
             </tr>
             <tr>
                 <td class="withpadding"><strong>Tagal ng Pagbabayad (Loan Term)</strong></td>
-                <td class="withpadding">{{ .Term }} (Weeks)</td>
+                <td class="withpadding">{{ .Data.Term }} (Weeks)</td>
             </tr>
             <tr>
                 <td class="withpadding"><strong>Halaga ng Tinanggap ng Nanghiram (Total Amount of Loan Proceeds)</strong></td>
-                <td class="withpadding">{{ .Loan_amount }}</td>
+                <td class="withpadding">{{ .Data.Loan_amount }}</td>
             </tr>
             <tr>
                 <td class="withpadding"><strong>Halaga ng Babayaran (Total Amount Repayment of Borrower)</strong></td>
-                <td class="withpadding">{{ .Total }}</td>
+                <td class="withpadding">{{ .Data.Total }}</td>
             </tr>
         </tbody>
     </table>
@@ -112,7 +112,7 @@
 <br>
 <div id="textdiv">
     <p style="text-align: justify; text-indent: 50px;">
-        Pinatototohanan ko na aking tinangap ang isang kopya ng kwentang ito bago pa maganap ang pag-utang at aking nauunawaan at sinasang-ayunan ang mga alituntunin at kasunduang nakapaloob dito at tinanggap ko ang halagang {{ .Amtword }} (Php <strong>{{ .Loan_amount }}.00</strong>) mula sa <strong>CARD BANK Inc.</strong>, Inc. ngayong <strong>{{ .Date_applied }}</strong>.
+        Pinatototohanan ko na aking tinangap ang isang kopya ng kwentang ito bago pa maganap ang pag-utang at aking nauunawaan at sinasang-ayunan ang mga alituntunin at kasunduang nakapaloob dito at tinanggap ko ang halagang {{ .Data.Amtword }} (Php <strong>{{ .Data.Loan_amount }}.00</strong>) mula sa <strong>CARD BANK Inc.</strong>, Inc. ngayong <strong>{{ .Data.Date_applied }}</strong>.
     </p>
     <br>
     <p style="text-align: justify; text-indent: 50px;">
@@ -159,7 +159,7 @@
         Kaugnay din nito, ay aking pinahihintulutan na direktang ipasok ng bangko sa aking sariling Pledge Savings Account ang anumang halaga ng loan proceeds na aking matatanggap kaugnay sa loan application na aking ipinasa at inaprubahan ng bangko.
     </p>
 </div>
-<div>
+<div style="page-break-before:always;">
     <br>
     <p style="text-align: center; color: rgba(0, 102, 0, 1);">
         <strong>AMORTIZATION TABLE</strong>
@@ -170,19 +170,19 @@
         <tbody>
             <tr>
                 <td style="width: 30%;">Name</td>
-                <td style="width: 30%;">{{ .Name }}</td>
+                <td style="width: 30%;">{{ .Data.Name }}</td>
                 <td style="width: 20%;">Product</td>
                 <td style="width: 20%;">ePersonal Loan</td>
             </tr>
             <tr>
                 <td>Customer CID</td>
-                <td>{{ .Customer_number }}</td>
+                <td>{{ .Data.Customer_number }}</td>
                 <td>Start Date</td>
                 <td>{{ .Start_date }}</td>
             </tr>
             <tr>
                 <td>Account Number</td>
-                <td>{{ .Settlement_account }}</td>
+                <td>{{ .Data.Settlement_account }}</td>
                 <td>Maturity Date</td>
                 <td>{{ .End_date }}</td>
             </tr>
@@ -203,7 +203,7 @@
     <table style="margin-top: 0;">
         <thead>
             <tr>
-                <th style="width: 20%;">Due Date</th>
+                <th style="width: 20%;" colspan="2">Due Date</th>
                 <th style="width: 16%;">Total Due</th>
                 <th style="width: 16%;">Principal Due</th>
                 <th style="width: 16%;">Interest Due</th>
@@ -213,13 +213,25 @@
         </thead>
         <tbody>
             <tr>
+                <td style="width: 3.5%;"></td>
                 <td></td>
-                <td style="text-align: center;">{{ .Total }}.00</td>
-                <td style="text-align: center;">{{ .Loan_amount  }}.00</td>
-                <td style="text-align: center;">{{ .Insterest_due }}.00</td>
-                <td style="text-align: center;">{{ .Loan_amount }}.00</td>
-                <td style="text-align: center;">{{ .Insterest_due }}.00</td>
+                <td style="font-weight: bold;">{{ .Data.Total }}.00</td>
+                <td style="font-weight: bold;">{{ .Data.Loan_amount  }}.00</td>
+                <td style="font-weight: bold;">{{ .Data.Insterest_due }}.00</td>
+                <td style="font-weight: bold;">{{ .Data.Loan_amount }}.00</td>
+                <td style="font-weight: bold;">{{ .Data.Insterest_due }}.00</td>
             </tr>
+            {{ range $element := .Amortization }}
+            <tr>
+                <td>{{ $element.num }}.</td>
+                <td>{{ $element.dueDate2 }}</td>
+                <td>{{ $element.dueTotal }}</td>
+                <td>{{ $element.duePrin }}</td>
+                <td>{{ $element.dueInt }}</td>
+                <td>{{ $element.balPrin }}</td>
+                <td>{{ $element.balInt }}</td>
+            </tr>
+            {{ end }}
         </tbody>
     </table>
 </div>

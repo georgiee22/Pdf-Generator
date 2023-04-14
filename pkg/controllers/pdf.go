@@ -1,12 +1,12 @@
 package controllers
 
 import (
+	"Template/pkg/models"
 	"Template/pkg/models/errors"
 	"Template/pkg/models/response"
 	"Template/pkg/utils/go-utils/database"
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -25,57 +25,14 @@ var buf bytes.Buffer
 // used for testing purposes
 func HtmlTest(c *fiber.Ctx) error {
 	// declare the html template
-	var temp *template.Template
-	temp = template.Must(template.ParseFiles("pdf-templates/Cela-ePN-Template.html"))
-
-	// // data struct for CARMELA
-	// // declare data struct to be rendered in template
-	// type carmela_data struct {
-	// 	Pnum        string `json:"pnum"`
-	// 	Date        string `json:"date"`
-	// 	Name        string `json:"name"`
-	// 	Spouse_name string `json:"spousename"`
-	// 	Addresses   string `json:"addresses"`
-	// 	Prin        string `json:"prin"`
-	// 	M_term      string `json:"mterm"`
-	// 	Nomflatrate string `json:"nomflatrate"`
-	// 	Eir         string `json:"eir"`
-	// 	Termdays    string `json:"termdays"`
-	// 	Elrf        string `json:"elrf"`
-	// 	Term        string `json:"term"`
-	// 	Weekly_due  string `json:"weeklydue"`
-	// 	Amtword     string `json:"amtword"`
-	// 	Fpay        string `json:"fpay"`
-	// 	Enddate     string `json:"enddate"`
-	// 	Settle      string `json:"settle"`
-	// }
-
-	// data struct for CELA
-	// declare data struct to be rendered in template
-	type cela_data struct {
-		Pn_no              string `json:"pnno"` // aka Pnum
-		Name               string `json:"name"` // name
-		Addresses          string `json:"addresses"`
-		Loan_amount        string `json:"loanamount"` // aka principal
-		Contractual_rate   string `json:"contractrualrate"`
-		Eir                string `json:"eir"`
-		Insterest_due      string `json:"Interest_due"` // aka total interest
-		Elrf               string `json:"elrf"`
-		Term               string `json:"term"`              // term
-		Total              string `json:"total"`             // calculated with interest_due+Loan_amount
-		Amtword            string `json:"amtword"`           // loan_amount converted to words
-		Start_date         string `json:"startdate"`         // aka Fpay
-		End_date           string `json:"enddate"`           // aka Enddate
-		Date_applied       string `json:"dateapplied"`       // aka sysdate
-		Customer_number    string `json:"customernumber"`    // aka customer_id
-		Settlement_account string `json:"settlementaccount"` // aka account number ????
-	}
+	// var temp *template.Template
+	temp := template.Must(template.ParseFiles("pdf-templates/Cela-ePN-Template.html"))
 
 	// initialize request_id, request key for template
 	var request_id = "LOAN-5d710489-5404-4478-99f8-a328486520db"
 
 	// declare variable with cela data struct
-	var data cela_data
+	data := &models.Cela_Data_In_Database{}
 
 	//Get data from data source
 	err := database.DBConn.Raw("SELECT * FROM cela_test_list_of_loan_applications WHERE request_id = ?", request_id).Find(&data).Error
@@ -103,7 +60,7 @@ func HtmlTest(c *fiber.Ctx) error {
 	} else if data.Loan_amount == "3000" {
 		data.Amtword = "Three Thousand"
 	} else if data.Loan_amount == "4000" {
-		data.Amtword = "TFour Thousand"
+		data.Amtword = "Four Thousand"
 	} else if data.Loan_amount == "5000" {
 		data.Amtword = "Five Thousand"
 	}
@@ -115,80 +72,24 @@ func HtmlTest(c *fiber.Ctx) error {
 	t, _ := time.Parse("2006-01-02", data.Date_applied)
 	data.Date_applied = t.Format("January 02, 2006")
 
-	// declare request body for LOS
-	type LOSRequestBody struct {
-		Principal     int    `json:"principal"`
-		Flatrate      int    `json:"flatRate"`
-		ProRateonHalf int    `json:"proRateonHalf"`
-		N             int    `json:"n"`
-		Frequency     int    `json:"frequency"`
-		DateReleased  string `json:"dateReleased"`
-		MeetingDay    int    `json:"meetingDay"`
-		DueDateType   int    `json:"dueDateType"`
-		WithDST       int    `json:"withDST"`
-		IsLumpSum     int    `json:"isLumpSum"`
-		IntComp       int    `json:"intComp"`
-		GracePeriod   int    `json:"gracePeriod"`
-	}
-
 	// convert data
 	term, _ := strconv.ParseInt(data.Term, 10, 64)
 
 	// get data from LOS API
 	// initialize request body
-	reqBody := &LOSRequestBody{
+	reqBody := &models.LOS_Request_Body{
 		Principal:     int(loan), // changeable
 		Flatrate:      24,
 		ProRateonHalf: 4,
 		N:             int(term), // changaable
 		Frequency:     50,
-		DateReleased:  date_applied, // ????
+		DateReleased:  date_applied, // assured date format is "2023-03-28"
 		MeetingDay:    6,            // ????
 		DueDateType:   1,
 		WithDST:       0,
 		IsLumpSum:     0,
 		IntComp:       1,
 		GracePeriod:   0,
-	}
-
-	// declare amortization struct
-	type Amor struct {
-		Num       int     `json:"num"`
-		Duedate   string  `json:"dueDate"`
-		DuePrin   float32 `json:"duePrin"`
-		DueInt    float32 `json:"dueInt"`
-		BalPrin   float32 `json:"balPrin"`
-		BalInt    float32 `json:"balInt"`
-		ExcessInt float32 `json:"excessInt"`
-		DueDate2  string  `json:"dueDate2"`
-		DueTotal  float32 `json:"dueTotal"`
-	}
-
-	type AmorResponse []Amor
-
-	// declare response body
-	type LOSResponseBody struct {
-		Principal           json.Number  `json:"principal"`
-		Flatrate            float32      `json:"flatRate"`
-		ProRateonHalf       float32      `json:"proRateonHalf"`
-		N                   int          `json:"n"`
-		DateReleased        string       `json:"dateReleased"`
-		MeetingDay          int          `json:"meetingDay"`
-		DueDateType         int          `json:"dueDateType"`
-		WithDST             int          `json:"withDST"`
-		IsLumpSum           int          `json:"isLumpSum"`
-		GracePeriod         int          `json:"gracePeriod"`
-		Frequency           string       `json:"frequency"`
-		InterestComputation string       `json:"interestComputation"`
-		Rate                float64      `json:"rate"`
-		DueAmt              float64      `json:"dueAmt"`
-		AddonPeriondInt     float64      `json:"addonPeriodInt"`
-		DateReleased2       string       `json:"dateReleased2"`
-		BspEffective        float64      `json:"bspEffective"`
-		Okay                bool         `json:"okay"`
-		Amortization        AmorResponse `json:"amortization"`
-		FirstPayment        string       `json:"firstPayment"`
-		TotalInterest       float64      `json:"totalInterest"`
 	}
 
 	// Marshal JSON request body
@@ -234,11 +135,11 @@ func HtmlTest(c *fiber.Ctx) error {
 			Data:    err.Error(),
 		})
 	}
-	fmt.Print(string(body))
+	// fmt.Print(string(body))
 
 	result := json.RawMessage(body)
-	fmt.Print(json.Valid(result))
-	mapResult := make(map[string]any)
+	// fmt.Print(json.Valid(result))
+	mapResult := make(map[string]interface{})
 	if unmarErr := json.Unmarshal(result, &mapResult); unmarErr != nil {
 		return c.JSON(response.ResponseModel{
 			RetCode: "400",
@@ -251,22 +152,38 @@ func HtmlTest(c *fiber.Ctx) error {
 		})
 	}
 
+	// set start date and end date based from LOS
+	dataslice := mapResult["amortization"].([]interface{})
+	// start date
+	amort_firstelem := dataslice[0].(map[string]interface{})
+	// end data
+	amort_lastelem := dataslice[len(dataslice)-1].(map[string]interface{})
+
+	// set all data needed to be rendered in html
+	allData := models.Cela_Data_To_Render{
+		Data:         *data,
+		Start_date:   amort_firstelem["dueDate2"].(string),
+		End_date:     amort_lastelem["dueDate2"].(string),
+		Amortization: mapResult["amortization"],
+	}
+
 	// reset buffer to ensure template and data is only executed once
 	buf.Reset()
 
 	// execute the template and data, store result in buffer
-	err = temp.Execute(&buf, data)
+	err = temp.Execute(&buf, allData)
 	if err != nil {
 		return err
 	}
 
-	return c.JSON(response.ResponseModel{
-		RetCode: "200",
-		Message: "success",
-		Data:    mapResult["amortization"],
-	})
+	// for testing purposes
+	// return c.JSON(response.ResponseModel{
+	// 	RetCode: "200",
+	// 	Message: "success",
+	// 	Data:    amort,
+	// })
 
-	// return c.SendString(buf.String())
+	return c.SendString(buf.String())
 }
 
 // actual function to generate pdf
@@ -281,58 +198,14 @@ func PdfTest(c *fiber.Ctx) error {
 	r.PageSize.Set(wkhtml.PageSizeLetter)
 
 	// declare the html template
-	var temp *template.Template
-	temp = template.Must(template.ParseFiles("pdf-templates/Cela-ePN-Template.html"))
+	// var temp *template.Template
+	temp := template.Must(template.ParseFiles("pdf-templates/Cela-ePN-Template.html"))
 
-	// // data struct for CARMELA
-	// // declare data struct to be rendered in template
-	// type carmela_data struct {
-	// 	Pnum        string `json:"pnum"`
-	// 	Date        string `json:"date"`
-	// 	Name        string `json:"name"`
-	// 	Spouse_name string `json:"spousename"`
-	// 	Addresses   string `json:"addresses"`
-	// 	Prin        string `json:"prin"`
-	// 	M_term      string `json:"mterm"`
-	// 	Nomflatrate string `json:"nomflatrate"`
-	// 	Eir         string `json:"eir"`
-	// 	Termdays    string `json:"termdays"`
-	// 	Elrf        string `json:"elrf"`
-	// 	Term        string `json:"term"`
-	// 	Weekly_due  string `json:"weeklydue"`
-	// 	Amtword     string `json:"amtword"`
-	// 	Fpay        string `json:"fpay"`
-	// 	Enddate     string `json:"enddate"`
-	// 	Settle      string `json:"settle"`
-	// }
-
-	// data struct for CELA
-	// declare data struct to be rendered in template
-	// data source is postgre cela_test
-	type cela_data struct {
-		Pn_no              string `json:"pnno"` // aka Pnum
-		Name               string `json:"name"` // name
-		Addresses          string `json:"addresses"`
-		Loan_amount        string `json:"loanamount"` // aka principal
-		Contractual_rate   string `json:"contractrualrate"`
-		Eir                string `json:"eir"`
-		Insterest_due      string `json:"Interest_due"` // aka total interest ????
-		Elrf               string `json:"elrf"`
-		Term               string `json:"term"`              // term
-		Total              string `json:"total"`             // calculated with interest_due+Loan_amount
-		Amtword            string `json:"amtword"`           // loan_amount converted to words
-		Start_date         string `json:"startdate"`         // aka Fpay
-		End_date           string `json:"enddate"`           // aka Enddate
-		Date_applied       string `json:"dateapplied"`       // aka sysdate
-		Customer_number    string `json:"customernumber"`    // aka customer_id
-		Settlement_account string `json:"settlementaccount"` // aka account number ????
-	}
-
-	// initialize cid, request key for template
+	// initialize request id, request key for template
 	var request_id = "LOAN-5d710489-5404-4478-99f8-a328486520db"
 
 	// declare variable with cela data struct
-	var data cela_data
+	data := &models.Cela_Data_In_Database{}
 
 	//Get data from data source, test db
 	err = database.DBConn.Raw("SELECT * FROM cela_test_list_of_loan_applications WHERE request_id = ?", request_id).Find(&data).Error
@@ -366,38 +239,26 @@ func PdfTest(c *fiber.Ctx) error {
 		data.Amtword = "Five Thousand"
 	}
 
+	// assure date_applied
+	date_applied := data.Date_applied
+
 	// format date_applied
 	t, _ := time.Parse("2006-01-02", data.Date_applied)
 	data.Date_applied = t.Format("January 02, 2006")
-
-	type LOSRequestBody struct {
-		Principal     int    `json:"principal"`
-		Flatrate      int    `json:"flatRate"`
-		ProRateonHalf int    `json:"proRateonHalf"`
-		N             int    `json:"n"`
-		Frequency     int    `json:"frequency"`
-		DateReleased  string `json:"dateReleased"`
-		MeetingDay    int    `json:"meetingDay"`
-		DueDateType   int    `json:"dueDateType"`
-		WithDST       int    `json:"withDST"`
-		IsLumpSum     int    `json:"isLumpSum"`
-		IntComp       int    `json:"intComp"`
-		GracePeriod   int    `json:"gracePeriod"`
-	}
 
 	// convert data
 	term, _ := strconv.ParseInt(data.Term, 10, 64)
 
 	// get data from LOS API
 	// initialize request body
-	reqBody := &LOSRequestBody{
+	reqBody := &models.LOS_Request_Body{
 		Principal:     int(loan), // changeable
 		Flatrate:      24,
 		ProRateonHalf: 4,
 		N:             int(term), // changaable
 		Frequency:     50,
-		DateReleased:  data.Date_applied, // ????
-		MeetingDay:    6,                 // ????
+		DateReleased:  date_applied, // ????
+		MeetingDay:    6,            // ????
 		DueDateType:   1,
 		WithDST:       0,
 		IsLumpSum:     0,
@@ -415,6 +276,7 @@ func PdfTest(c *fiber.Ctx) error {
 		})
 	}
 
+	// make request to LOS to calculate amortization
 	req, err := http.NewRequest("POST", "https://loscbtest.cardmri.com:8444/LOSMobileAPI/ComputeAmortization", bytes.NewBuffer(jsonReq))
 	if err != nil {
 		return c.JSON(response.ResponseModel{
@@ -460,11 +322,26 @@ func PdfTest(c *fiber.Ctx) error {
 		})
 	}
 
+	// set start date and end date based from LOS
+	dataslice := mapResult["amortization"].([]interface{})
+	// start date
+	amort_firstelem := dataslice[0].(map[string]interface{})
+	// end data
+	amort_lastelem := dataslice[len(dataslice)-1].(map[string]interface{})
+
+	// set all data needed to be rendered in html
+	allData := models.Cela_Data_To_Render{
+		Data:         *data,
+		Start_date:   amort_firstelem["dueDate2"].(string),
+		End_date:     amort_lastelem["dueDate2"].(string),
+		Amortization: mapResult["amortization"],
+	}
+
 	// reset buffer to ensure template and data is only executed once
 	buf.Reset()
 
 	// execute the template and data, store result in buffer
-	err = temp.Execute(&buf, data)
+	err = temp.Execute(&buf, allData)
 	if err != nil {
 		return err
 	}
@@ -480,7 +357,7 @@ func PdfTest(c *fiber.Ctx) error {
 	page1 := wkhtml.NewPageReader(strings.NewReader(str))
 
 	// set page 1 options
-	page1.Allow.Set("/Users/g.tan/Projects/Pdf-Generator/Go_Template/pdf-templates")
+	page1.Allow.Set("/Users/fdsap-gatan/Projects/Pdf-Generator/pdf-templates")
 	page1.EnableLocalFileAccess.Set(true)
 
 	// add page
